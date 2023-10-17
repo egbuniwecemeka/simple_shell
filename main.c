@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 /**
  * main - checks the code
@@ -53,4 +54,6 @@ int main(int argc, char *argv[], char **env)
 			exit(EXIT_FAILURE);
 		}
 	}
+	free(buffer);
+	return (0);
 }
