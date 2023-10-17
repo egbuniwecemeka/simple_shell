@@ -1,10 +1,11 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include <stdbool.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 
-int shell_exe(char **envp);
+void shell_exe(char **envp);
 void execve_func(char **buffer, struct stat *statbuf, char **envp);
 
 #endif

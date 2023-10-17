@@ -2,13 +2,14 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
 
 void shell_exe(char **envp)
 {
-	char *buffer = NULL, *prompt = 'S ';
+	char *buffer = NULL, *prompt = "$ ";
 	size_t buffer_size = 0;
 	ssize_t bytes;
 	pid_t pid;
@@ -27,12 +28,12 @@ void shell_exe(char **envp)
 		if (bytes == -1)
 		{
 			perror("Error: (getline)\n");
-			free(bytes);
+			free(buffer);
 			exit(EXIT_FAILURE);
 		}
 
-		if (buffer(bytes - 1) == '\n')
-			buffer(bytes - 1) = '\0';
+		if (buffer[bytes - 1] == '\n')
+			buffer[bytes - 1] = '\0';
 
 		pid = fork();
 		if (pid == -1)
@@ -43,7 +44,7 @@ void shell_exe(char **envp)
 
 		if (pid == 0)
 		{
-			execve_func(&buffer, &statbuf, env);	/*check envp*/
+			execve_func(&buffer, &statbuf, envp);
 		}
 
 		if (waitpid(pid, &wstatus, 0) == -1)
