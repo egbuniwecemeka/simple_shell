@@ -16,10 +16,16 @@ void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), ch
 	char *delim = " ";
 
 	/*count number of arguments*/
+
+	/* Debug print statement before tokenization */
+	printf("Original string: %s\n", *buffer);
+
 	argc = 0;
+	/*loop for tokenization*/
 	token = strtok(*buffer, delim);
 	while (token != NULL)
 	{
+		printf("Token: %s\n", token);
 		argc++;
 		token = strtok(NULL, delim);
 	}
@@ -36,18 +42,21 @@ void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), ch
 	/*argv with arguments/tokens*/
 
 	token = strtok(*buffer, delim);
-	while (token != NULL)
+	for(int i = 0; i < argc; ++i)
 	{
-		argv[argc] = token;
-		argc++;
+		argv[i] = token;
 		token = strtok(NULL, delim);
 	}
-
 	/*Use null to terminate the argv array*/
 	argv[argc] = NULL;
 
 	/* set exe to be first argument */
 	exe = argv;
+
+	/*Debug print statements*/
+	printf("Execute: %s\n", exe[0]);
+	for (int i = 0; exe[i] != NULL; ++i)
+		printf("Arg[%d]: %s\n", i, exe[i]);
 
 	execve(exe[0], exe, envp);
 	perror("Error: (execve)\n");
