@@ -42,7 +42,7 @@ void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), ch
 	/*argv with arguments/tokens*/
 
 	token = strtok(*buffer, delim);
-	for(int i = 0; i < argc; ++i)
+	for (int i = 0; i < argc; ++i)
 	{
 		argv[i] = token;
 		token = strtok(NULL, delim);

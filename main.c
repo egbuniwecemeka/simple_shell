@@ -8,9 +8,10 @@
  * Return: 0 (Success)
  */
 
-int main()
+int main(void)
 {
 	char *envp[] = {NULL};
+
 	shell_exe(envp);
 	return (0);
 }
