@@ -22,8 +22,6 @@ void shell_exe(char **envp)
 		if (isatty(STDIN_FILENO) == 0)
 			pipe_ed = true;
 
-		write(STDOUT_FILENO, prompt, 2);
-
 		bytes = getline(&buffer, &buffer_size, stdin);
 		if (bytes == -1)
 		{
@@ -46,11 +44,16 @@ void shell_exe(char **envp)
 		{
 			execve_func(&buffer, &statbuf, envp);
 		}
-
-		if (waitpid(pid, &wstatus, 0) == -1)
+		else
 		{
-			perror("Error: (wait)");
-			exit(EXIT_FAILURE);
+			if (waitpid(pid, &wstatus, 0) == -1)
+			{
+				perror("Error: (wait)");
+				exit(EXIT_FAILURE);
+			}
+
+			/* display prompt after each execution of command*/
+			write(STDOUT_FILENO, prompt, 2);
 		}
 	}
 
