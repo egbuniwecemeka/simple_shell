@@ -15,8 +15,8 @@ void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), ch
 	char *delim = " ";
 	int i;
 
-	/* Debug print statement before tokenization */
-	printf("Original string: %s\n", *buffer);
+	/* Debug print statement before tokenization 
+	printf("Original string: %s\n", *buffer);*/
 
 	argc = 0;
 	/*loop for tokenization*/
@@ -35,7 +35,7 @@ void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), ch
 	/*counts & checks number of arguments*/
 	while (token != NULL)
 	{
-		printf("Token: %s\n", token);
+		/*printf("Token: %s\n", token);*/
 		argc++;
 		token = strtok(NULL, delim);
 
@@ -69,13 +69,15 @@ void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), ch
 	/*Use null to terminate the argv array*/
 	argv[argc] = NULL;
 
-	/*Debug print statements*/
+	/*Debug print statements
 	printf("Execute: %s\n", argv[0]);
 	for (i = 0; argv[i] != NULL; ++i)
-		printf("Arg[%d]: %s\n", i, argv[i]);
+		printf("Arg[%d]: %s\n", i, argv[i]);*/
 
-	execve(argv[0], argv, envp);
-	perror("Error: (execve)\n");
+	if (execve(argv[0], argv, envp) == -1)
+	{
+		perror("./hsh");
+	}
 
 	/*Free allocated memory*/
 	free(argv);
