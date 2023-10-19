@@ -12,11 +12,8 @@ void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), ch
 	int argc;
 	char **argv;
 	char *token;
-	char **exe;
 	char *delim = " ";
 	int i;
-
-	/*count number of arguments*/
 
 	/* Debug print statement before tokenization */
 	printf("Original string: %s\n", *buffer);
@@ -24,14 +21,34 @@ void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), ch
 	argc = 0;
 	/*loop for tokenization*/
 	token = strtok(*buffer, delim);
+
+	/*Allocate mem for argv*/
+	argv = (char **)malloc(2 * sizeof(char *));
+
+	if (argv == NULL)
+	{
+		perror("Error: (malloc)\n");
+		free(*buffer);
+		exit(EXIT_FAILURE);
+	}
+
+	/*counts & checks number of arguments*/
 	while (token != NULL)
 	{
 		printf("Token: %s\n", token);
 		argc++;
 		token = strtok(NULL, delim);
+
+		if (argc > 1)
+		{
+			perror("Only simple arguments without are allowed\n");
+			free(*buffer);
+			free(argv);
+			exit(EXIT_FAILURE);
+		}
 	}
 
-	/* Allocate memory for argv*/
+	/* Allocate memory for argv using arguments/tokens */
 	argv = (char **)malloc((argc + 1) * sizeof(char *));
 	if (argv == NULL)
 	{
@@ -40,7 +57,7 @@ void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), ch
 		exit(EXIT_FAILURE);
 	}
 
-	/*argv with arguments/tokens*/
+	/*Tokenization to fill argv agsin*/
 
 	token = strtok(*buffer, delim);
 	for (i = 0; i < argc; ++i)
@@ -48,18 +65,16 @@ void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), ch
 		argv[i] = token;
 		token = strtok(NULL, delim);
 	}
+
 	/*Use null to terminate the argv array*/
 	argv[argc] = NULL;
 
-	/* set exe to be first argument */
-	exe = argv;
-
 	/*Debug print statements*/
-	printf("Execute: %s\n", exe[0]);
-	for (i = 0; exe[i] != NULL; ++i)
-		printf("Arg[%d]: %s\n", i, exe[i]);
+	printf("Execute: %s\n", argv[0]);
+	for (i = 0; argv[i] != NULL; ++i)
+		printf("Arg[%d]: %s\n", i, argv[i]);
 
-	execve(exe[0], exe, envp);
+	execve(argv[0], argv, envp);
 	perror("Error: (execve)\n");
 
 	/*Free allocated memory*/
