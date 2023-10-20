@@ -7,7 +7,7 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 
-void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), char **envp)
+void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), char **envp, const char *prompt)
 {
 	int argc;
 	char **argv;
@@ -76,7 +76,9 @@ void execve_func(char **buffer, struct stat *statbuf __attribute__((unused)), ch
 
 	if (execve(argv[0], argv, envp) == -1)
 	{
-		perror("./hsh");
+		perror("./hsh\n");
+
+		write(STDOUT_FILENO, prompt, strlen(prompt));
 	}
 
 	/*Free allocated memory*/

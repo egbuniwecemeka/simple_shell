@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -42,18 +43,18 @@ void shell_exe(char **envp)
 
 		if (pid == 0)
 		{
-			execve_func(&buffer, &statbuf, envp);
+			execve_func(&buffer, &statbuf, envp, prompt);
 		}
 		else
 		{
 			if (waitpid(pid, &wstatus, 0) == -1)
 			{
-				perror("Error: (wait)");
+				perror("Error: (wait)\n");
 				exit(EXIT_FAILURE);
 			}
 
 			/* display prompt after each execution of command*/
-			write(STDOUT_FILENO, prompt, 2);
+			write(STDOUT_FILENO, prompt, strlen(prompt));
 		}
 	}
 
